@@ -45,7 +45,7 @@ chmod g+r /home/inge
 # mit acl
 setfacl -m "g:eink:rx" anna/
 setfacl -m "g:eink:rx" egon/
-setfacl -m "g:buch:rx" udp/
+setfacl -m "g:buch:rx" udo/
 setfacl -m "g:verk:rx" udo/
 setfacl -m "g:verk:rx" willi/
 setfacl -m "g:leit:rx" otto/
