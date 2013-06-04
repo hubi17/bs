@@ -29,10 +29,10 @@ mkdir /home/leit
 chgrp leit /home/leit
 chmod 770 /home/leit
 # mit acl
-setfacl -m "g:eink:rwx" eink/
-setfacl -m "g:buch:rwx" buch/
-setfacl -m "g:verk:rwx" verk/
-setfacl -m "g:leit:rwx" leit/
+setfacl -Rm "g:eink:rwx" eink/
+setfacl -Rm "g:buch:rwx" buch/
+setfacl -Rm "g:verk:rwx" verk/
+setfacl -Rm "g:leit:rwx" leit/
 
 # private verz primaergruppenmitglieder haben leserechte
 # ohne acl realisiert
@@ -43,10 +43,10 @@ chmod g+r /home/willi
 chmod g+r /home/otto
 chmod g+r /home/inge
 # mit acl
-setfacl -m "g:eink:rx" anna/
-setfacl -m "g:eink:rx" egon/
-setfacl -m "g:buch:rx" udo/
-setfacl -m "g:verk:rx" udo/
-setfacl -m "g:verk:rx" willi/
-setfacl -m "g:leit:rx" otto/
-setfacl -m "g:leit:rx" inge/
+setfacl -Rm "g:eink:rx" anna/
+setfacl -Rm "g:eink:rx" egon/
+setfacl -Rm "g:buch:rx" udo/
+setfacl -Rm "g:verk:rx" udo/
+setfacl -Rm "g:verk:rx" willi/
+setfacl -Rm "g:leit:rx" otto/
+setfacl -Rm "g:leit:rx" inge/
