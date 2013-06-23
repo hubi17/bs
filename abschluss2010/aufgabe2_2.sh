@@ -9,7 +9,7 @@ do
 	#geburtstag und monat aus datei ermitteln
 	GEBURTSTAG=`echo "$ZEILE" | egrep -o '[0-9]{2}/[0-9]{2}'`
 	#geburtstag mit aktuellen tag und monat vergleichen
-	if [ "$GEBURTSTAG" = "$TAG/$MONAT" ]
+	if [[ "$GEBURTSTAG" = "$TAG/$MONAT" ]]
 	then
 		TEXT=`echo "$ZEILE" | egrep -o '[A-Z][A-Za-z[:space:]]+'`
 		for i in /dev/pts/*

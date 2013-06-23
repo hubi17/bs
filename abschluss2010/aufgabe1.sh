@@ -16,7 +16,7 @@
 #setfacl -Rm "u:fritz:rwx" /home/archiv/
 #setfacl -Rm "u:fritz:rwx" /home/kosten/
 #setfacl -Rm "u:fritz:rwx" /home/projekte/
-if [ ! -z $1 ]
+if [[ ! -z $1 ]]
 then
 	case "$1" in
 		"ein")
