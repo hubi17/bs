@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Using Regular Expressions in Groovy</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="Learn how to use Groovy's special syntax for regular expressions">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/groovy.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/groovy.html" TARGET="_top">Easily use the power of regular expressions in your Groovy applications</A> with RegexBuddy.</B><BR>
+Create and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Implement regexes in your applications with instant Groovy code snippets.  Just tell RegexBuddy what you want to achieve, and copy and paste the auto-generated Groovy code. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD></TR></TABLE>
+
+
+<H1>Using Regular Expressions in Groovy</H1>
+
+<P>Because Groovy is based on Java, you can use <A HREF="java.html" TARGET="_top">Java's regular expression package</A> with Groovy.  Simply put <TT CLASS=code>import java.util.regex.*</TT> at the top of your Groovy source code.  Any Java code using regular expressions will then automatically work in your Groovy code too.</P>
+
+<p>Using verbose Java code to work with regular expressions in Groovy wouldn't be very groovy.  Groovy has a bunch of language features that make code using regular expressions a lot more concise.  You can mix the Groovy-specific syntax with regular Java code.  It's all based in the <tt>java.util.regex</tt> package, which you'll need to import regardless.</p>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><h2>Groovy Strings</h2>
+
+<p>Java has only one string style.  Strings are placed between double quotes.  Double quotes and backslashes in strings must be escaped with backslashes.  That yields a forest of backslashes in literal regular expressions.</p>
+
+<p>Groovy has five string styles.  Strings can be placed between single quotes, double quotes, triple single quotes, and triple double quotes.  Using triple single or double quotes allows the string to span multiple lines, which is handy for free-spacing regular expressions.  Unfortunately, all four of these string styles require backslashes to be escaped.</p>
+
+<p>The fifth string style is provided specifically for regular expressions.  The string is placed between forward slashes, and only forward slashes (not backslashes) in the string need to be escaped.  This is indeed a string style.  Both <tt>/hello/</tt> and <tt>"hello"</tt> are literal instances of <tt>java.lang.String</tt>.  Unfortunately, strings delimited with forward slashes cannot span across lines, so you can't use them for free-spacing regular expressions.</p>
+
+<h2>Groovy Patterns and Matchers</h2>
+
+<p>To actually use a string as a regular expression, you need to instantiate the <tt>java.util.regex.Pattern</tt> class.  To actually use that pattern on a string, you need to instantiate the <tt>java.util.regex.Matcher</tt> class.  You use these classes in Groovy just like you do in Java.  But Groovy does provide some special syntax that allows you to create those instances with much less typing.</p>
+
+<p>To create a <tt>Pattern</tt> instance, simply place a tilde before the string with your regular expression.  The string can use any of Groovy's five string styles.  When assigning this pattern to a variable, make sure to leave a space between the assignment operator and the tilde.</p>
+
+<pre>Pattern myRegex = ~/regex/</pre>
+
+<p>You won't actually instantiate patterns this way very often.  The only time you need the <tt>Pattern</tt> instance is to split a string, which requires you to call <tt>Pattern.split()</tt>.  To find regex matches or to search-and-replace with a regular expression, you need a <tt>Matcher</tt> instance that binds the pattern to a string.  In Groovy, you can create this instance directly from the literal string with your regular expression using the <tt>=~</tt> operator.  No space between the <tt>=</tt> and <tt>~</tt> this time.</p>
+
+<pre>Matcher myMatcher = "subject" =~ /regex/</pre>
+
+<p>This short for:</p>
+
+<pre>Matcher myMatcher = Pattern.compile(/regex/).matcher("subject")</pre>
+
+<p>Finally, the <tt>==~</tt> operator is a quick way to test whether a regex can match a string entirely.  <tt>myString ==~ /regex/</tt> is equivalent to <tt>myString.matches(/regex/)</tt>.  To find partial matches, you need to use the <tt>Matcher</tt>.</p>
+
+
+<H2>Further Reading</H2>
+
+<P><A HREF="javabook.html" TARGET="_top"><IMG SRC="books/javabooksmall.jpg" WIDTH=106 HEIGHT=140 ALT="Java Regular Expressions - Taming the java.util.regex Engine" BORDER=0 ALIGN=right CLASS=right></A>If you'd like a more detailed overview of all the functionality offered by the java.util.regex package, you may want to get yourself a copy of "Java Regular Expressions" written by Mehran Habibi and published by Apress.  Though this book doesn't mention Groovy at all, it is the most detailed guide to the java.util.regex package, which is what you're using with Groovy.  Groovy only ads some syntactic shortcuts, which are all explained on this web page.</P>
+
+<P><A HREF="javabook.html" TARGET="_top">My review of the book Java Regular Expressions</A></P>
+
+<ul>
+<li><A HREF="http://www.amazon.com/exec/obidos/ASIN/1590591070/jgsbookselection">Buy Java Regular Expressions from Amazon.com</A>
+<li><A HREF="http://www.amazon.co.uk/exec/obidos/ASIN/1590591070/jgsbookselect">Buy Java Regular Expressions from Amazon.co.uk</A>
+<li><A HREF="http://www.amazon.fr/exec/obidos/ASIN/1590591070/regularexpres-21">Buy Java Regular Expressions from Amazon.fr</A>
+<li><A HREF="http://www.amazon.de/exec/obidos/ASIN/1590591070/regularexpr0a-21">Buy Java Regular Expressions from Amazon.de</A>
+</ul>
+
+<h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="groovy.html" TARGET="_top">http://www.Regular-Expressions.info/groovy.html</A><BR>
+Page last updated: 26 January 2011<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

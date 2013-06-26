@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>grep tutorial</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="The utility from the UNIX world, but now available on all platforms, including Windows, that first made regular expressions popular">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<H1>What Is grep?</H1> <P>Grep is a tool that originated from the UNIX world during the 1970's. It can search through files and folders (directories in UNIX) and check which lines in those files match a given <A HREF="index.html" TARGET="_top">regular expression</A>. Grep will output the filenames and the line numbers or the actual lines that matched the regular expression. All in all a very useful tool for locating information stored anywhere on your computer, even (or especially) if you do not really know where to look.</P> <script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><H2>Using grep</H2> <P> If you type <TT>grep regex *.txt</TT> grep will search through all text files in the current folder. It will apply the regex to each line in the files, and print (i.e. display) each line on which a match was found. This means that grep is inherently line-based. Regex matches cannot span multiple lines.</P> <P>If you like to work on the command line, the traditional grep tool will make a lot of tasks easier. All Linux distributions (except tiny floppy-based ones) install a version of grep by default, usually <A HREF="gnu.html" TARGET="_top">GNU</A> grep. If you are using Microsoft Windows, you will need to download and install it separately. If you use Borland development tools, you already have Borland's Turbo GREP installed.</P> <P>grep not only works with globbed files, but also with anything you supply on the standard input. When used with standard input, grep will print all lines it reads from standard input that match the regex. E.g.: the Linux <TT>find</TT> command will glob the current directory and print all file names it finds, so <TT>find | grep regex</TT> will print only the file names that match regex.</P> <H2>Grep’s Regex Engine</H2> <P>Most versions of grep use a regex-directed <A HREF="engine.html" TARGET="_top">engine</A>, like the regex flavors discussed in the <A HREF="tutorial.html" TARGET="_top">regex tutorial</A> on this website . However, grep's regex flavor is very limited. On POSIX systems, it uses <a href="posix.html#bre">POSIX Basic Regular Expressions</a>.</P> <P>An enhanced version of grep is called egrep. It uses a <A HREF="engine.html" TARGET="_top">text-directed engine</A>. Since neither grep nor egrep support any of the special features such as <A HREF="repeat.html" TARGET="_top">lazy repetition</A> or <A HREF="lookaround.html" TARGET="_top">lookaround</A>, and because grep and egrep only indicate whether a match was found on a particular line or not, this distinction does not matter, except that the text-directed engine is faster. On POSIX systems, egrep uses <a href="posix.html#bre">POSIX Extended Regular Expressions</a>. Despite the name "extended", egrep is almost the same as grep. It just uses a slightly different regex syntax and adds support for alternation, but loses support for backreferences.</P> <P>GNU grep, the most popular version of grep on Linux, uses both a text-directed and a regex-directed engine. If you use backreferences it uses the regex-directed engine. Otherwise, it uses the faster text-directed engine. Again, for the tasks that grep is designed for, this does not matter to you, the user. If you type the "grep" command, you'll use the <a href="gnu.html#bre">GNU Basic Regular Expressions syntax</a>. If you type the "egrep" ocmmand, you'll use the <a href="gnu.html#ere">GNU Extended Regular Expressions syntax</a>. The GNU versions of grep and egrep have exactly the same capabilities, including alternation for grep and backreferences for egrep. They only use a slightly different syntax.</P> <H2>Beyond The Command Line</H2> <P>If you like to work on the command line, then the traditional grep tool is for you. But if you like to use a graphical user interface, there are many grep-like tools available for Windows and other platforms. Simply search for "grep" on your favorite software download site. Unfortunately, many grep tools come with poor documentation, leaving it up to you to figure out exactly which regex flavor they use. It's not because they claim to be Perl-compatible, that they actually are. Some are almost perfectly compatible (but never identical, though), but others fail miserably when you want to use advanced and very useful constructs like <A HREF="lookaround.html" TARGET="_top">lookaround</A>.</P> <P>One Windows-based grep tool that stands out from the crowd is <A HREF="powergrep.html" TARGET="_top">PowerGREP</A>, which I will discuss next.</P><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="grep.html" TARGET="_top">http://www.Regular-Expressions.info/grep.html</A><BR>
+Page last updated: 02 December 2010<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

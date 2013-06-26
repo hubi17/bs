@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>JavaScript RegExp Example: Online Regular Expression Tester</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="Example of how to use the JavaScript RegExp Object.  Test your regular expressions online in your web browser.">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/test.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/test.html" TARGET="_top">Interactively create and test regular expressions with RegexBuddy</A>.</B><BR>
+<b>Create</b> and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Quickly <b>test</b> regular expressions on sample data and files in a safe sandbox.  <b>Debug</b> regexes easily with real-time highlighting and informative regex match details. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD>
+</TR></TABLE>
+
+
+<H1>JavaScript RegExp Example: Regular Expression Tester</H1>
+
+
+
+<P>Feel free to test JavaScript's RegExp support right here in your browser.  Obviously, JavaScript (or Microsoft's variant JScript) will need to be enabled in your browser for this to work.  Since this tester is implemented in JavaScript, it will reflect the features and limitations of your web browser's JavaScript implementation.  If you're looking for a general-purpose <A HREF="http://www.regexbuddy.com/test.html" TARGET="_top">regular expression tester</A> supporting a variety of regex flavors, grab yourself a copy of <A HREF="regexbuddy.html" TARGET="_top">RegexBuddy</A>.<P>
+
+<P><A HREF="javascript.html" TARGET="_top">Learn how to use the JavaScript RegExp object</A>.</P>
+
+<SCRIPT LANGUAGE="JavaScript"><!--
+function demoMatchClick() {
+  var re = new RegExp(document.demoMatch.regex.value);
+  if (document.demoMatch.subject.value.match(re)) {
+    alert("Successful match");
+  } else {
+    alert("No match");
+  }
+}
+
+function demoShowMatchClick() {
+  var re = new RegExp(document.demoMatch.regex.value);
+  var m = re.exec(document.demoMatch.subject.value);
+  if (m == null) {
+    alert("No match");
+  } else {
+    var s = "Match at position " + m.index + ":\n";
+    for (i = 0; i < m.length; i++) {
+      s = s + m[i] + "\n";
+    }
+    alert(s);
+  }
+}
+
+function demoReplaceClick() {
+  var re = new RegExp(document.demoMatch.regex.value, "g");
+  document.demoMatch.result.value = 
+    document.demoMatch.subject.value.replace(re, 
+      document.demoMatch.replacement.value);
+}
+// -->
+</SCRIPT>
+
+<FORM ID="demoMatch" NAME="demoMatch" METHOD=POST ACTION="javascript:void(0)">
+<P>Regexp: <INPUT TYPE=TEXT NAME="regex" VALUE="\bt[a-z]+\b" SIZE=50></P>
+<P>Subject string: <INPUT TYPE=TEXT NAME="subject" VALUE="This is a test of the JavaScript RegExp object" SIZE=50></P>
+<P><INPUT TYPE=SUBMIT VALUE="Test Match" ONCLICK="demoMatchClick()">
+<INPUT TYPE=SUBMIT VALUE="Show Match" ONCLICK="demoShowMatchClick()"></P>
+
+<P>Replacement text: <INPUT TYPE=TEXT NAME="replacement" VALUE="replaced" SIZE=50></P>
+<P>Result: <INPUT TYPE=TEXT NAME="result" VALUE="click the button to see the result" SIZE=50></P>
+<P><INPUT TYPE=SUBMIT VALUE="Replace" ONCLICK="demoReplaceClick()"></P>
+</FORM>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><H2>JavaScript RegExp Tester Source Code</H2>
+
+<PRE><SPAN CLASS=longcode>&lt;SCRIPT LANGUAGE="JavaScript"&gt;&lt;!--
+function demoMatchClick() {
+  var re = new RegExp(document.demoMatch.regex.value);
+  if (document.demoMatch.subject.value.match(re)) {
+    alert("Successful match");
+  } else {
+    alert("No match");
+  }
+}
+
+function demoShowMatchClick() {
+  var re = new RegExp(document.demoMatch.regex.value);
+  var m = re.exec(document.demoMatch.subject.value);
+  if (m == null) {
+    alert("No match");
+  } else {
+    var s = "Match at position " + m.index + ":\n";
+    for (i = 0; i &lt; m.length; i++) {
+      s = s + m[i] + "\n";
+    }
+    alert(s);
+  }
+}
+
+function demoReplaceClick() {
+  var re = new RegExp(document.demoMatch.regex.value, "g");
+  document.demoMatch.result.value = 
+    document.demoMatch.subject.value.replace(re, 
+      document.demoMatch.replacement.value);
+}
+// --&gt;
+&lt;/SCRIPT&gt;
+
+&lt;FORM ID="demoMatch" NAME="demoMatch" METHOD=POST ACTION="javascript:void(0)"&gt;
+&lt;P&gt;Regexp: &lt;INPUT TYPE=TEXT NAME="regex" VALUE="\bt[a-z]+\b" SIZE=50&gt;&lt;/P&gt;
+&lt;P&gt;Subject string: &lt;INPUT TYPE=TEXT NAME="subject" 
+   VALUE="This is a test of the JavaScript RegExp object" SIZE=50&gt;&lt;/P&gt;
+&lt;P&gt;&lt;INPUT TYPE=SUBMIT VALUE="Test Match" ONCLICK="demoMatchClick()"&gt;
+&lt;INPUT TYPE=SUBMIT VALUE="Show Match" ONCLICK="demoShowMatchClick()"&gt;&lt;/P&gt;
+
+&lt;P&gt;Replacement text: &lt;INPUT TYPE=TEXT NAME="replacement" VALUE="replaced" SIZE=50&gt;&lt;/P&gt;
+&lt;P&gt;Result: &lt;INPUT TYPE=TEXT NAME="result" 
+   VALUE="click the button to see the result" SIZE=50&gt;&lt;/P&gt;
+&lt;P&gt;&lt;INPUT TYPE=SUBMIT VALUE="Replace" ONCLICK="demoReplaceClick()"&gt;&lt;/P&gt;
+&lt;/FORM&gt;</SPAN></PRE><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="javascriptexample.html" TARGET="_top">http://www.Regular-Expressions.info/javascriptexample.html</A><BR>
+Page last updated: 22 September 2010<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><iframe class="amazonsingle" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&o=1&p=8&l=as1&asins=1449319432&md=10FE9736YVPPT7A0FBG2&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

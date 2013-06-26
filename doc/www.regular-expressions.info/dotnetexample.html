@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>C# Demo Application Illustrating the Use of Regular Expressions with The .NET Framework</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="C# WinForms Demo Application Illustrating the Use of Regular Expressions with The Microsoft .NET Framework">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/csharp.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/csharp.html" TARGET="_top">Easily use the power of regular expressions in your C# and VB.NET applications</A> with RegexBuddy.</B><BR>
+Create and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Implement regexes in your applications with instant C# and VB.NET code snippets.  Just tell RegexBuddy what you want to achieve, and copy and paste the auto-generated C# or VB.NET code. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD>
+</TR></TABLE>
+
+
+<H1>C# Demo Application Illustrating the Use of Regular Expressions with The .NET Framework</H1>
+
+
+
+<P><A HREF="dotnet.html" TARGET="_top">Learn how to use the System.Text.RegularExpressions library of the Microsoft .NET Framework</A>.</P>
+<P><A HREF="http://www.regular-expressions.info/download/csharpregexdemo.zip">Download the demo application and complete source code</A></P>
+
+
+
+<PRE><SPAN CLASS="longcode"><SPAN CLASS="reservedword">using</SPAN> System;
+<SPAN CLASS="reservedword">using</SPAN> System.Drawing;
+<SPAN CLASS="reservedword">using</SPAN> System.Collections;
+<SPAN CLASS="reservedword">using</SPAN> System.ComponentModel;
+<SPAN CLASS="reservedword">using</SPAN> System.Windows.Forms;
+<SPAN CLASS="reservedword">using</SPAN> System.Data;
+
+<SPAN CLASS="comment">// This line allows us to use classes like Regex and Match
+// without having to spell out the entire location.</SPAN>
+<SPAN CLASS="reservedword">using</SPAN> System.Text.RegularExpressions;
+
+<SPAN CLASS="reservedword">namespace</SPAN> RegexDemo
+{
+  <SPAN CLASS="comment">/// &lt;summary&gt;
+  /// Application showing the use of regular expressions in the .NET framework
+  /// Copyright (c) 2003 Jan Goyvaerts.  All rights reserved.
+  /// Visit http://www.regular-expressions.info for a detailed tutorial to regular expressions.
+  ///
+  /// This source code is provided for educational purposes only, without 
+  /// any warranty of any kind.  Distribution of this source code and/or the
+  /// application compiled from this source code is prohibited.  Please refer 
+  /// everybody interested in getting a copy of the source code to 
+  /// http://www.regular-expressions.info where it can be downloaded.
+  /// &lt;/summary&gt;</SPAN>
+  <SPAN CLASS="reservedword">public class</SPAN> FormRegex : System.Windows.Forms.Form
+  {
+    <SPAN CLASS="comment">// Designer-generated code to create the form has been omitted for brevity</SPAN>
+
+    <IMG SRC="screens/csharpexample.png" ALT="C# Demo Application Illustrating the Use of Regular Expressions with The .NET Framework">
+
+    <SPAN CLASS="reservedword">private void</SPAN> checkDotAll_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// "Dot all" and "ECMAScript" are mutually exclusive options.</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkDotAll.Checked) checkECMAScript.Checked = <SPAN CLASS="reservedword">false</SPAN>;
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> checkECMAScript_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// "Dot all" and "ECMAScript" are mutually exclusive options.</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkECMAScript.Checked) checkDotAll.Checked = <SPAN CLASS="reservedword">false</SPAN>;
+    }
+
+    <SPAN CLASS="reservedword">private</SPAN> RegexOptions getRegexOptions()
+    {
+      <SPAN CLASS="comment">// "Dot all" and "ECMAScript" are mutually exclusive options.
+      // If we include them both, then the Regex() constructor or the 
+      // Regex.Match() method will raise an exception</SPAN>
+      System.Diagnostics.Trace.Assert(
+             !(checkDotAll.Checked &amp;&amp; checkECMAScript.Checked), 
+             <SPAN CLASS="characterstring">"DotAll and ECMAScript options are mutually exclusive"</SPAN>);
+      <SPAN CLASS="comment">// Construct a RegexOptions object
+      // If the options are predetermined, you can simply pass something like 
+      // RegexOptions.Multiline | RegexOptions.Ignorecase
+      // directly to the Regex() constructor or the Regex.Match() method</SPAN>
+      RegexOptions options = <SPAN CLASS="reservedword">new</SPAN> RegexOptions();
+      <SPAN CLASS="comment">// If true, the dot matches any character, including a newline
+      // If false, the dot matches any character, except a newline</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkDotAll.Checked) options |= RegexOptions.Singleline;
+      <SPAN CLASS="comment">// If true, the caret ^ matches after a newline, and the dollar $ matches 
+      // before a newline, as well as at the start and end of the subject string
+      // If false, the caret only matches at the start of the string
+      // and the dollar only at the end of the string</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkMultiLine.Checked) options |= RegexOptions.Multiline;
+      <SPAN CLASS="comment">// If true, the regex is matched case insensitively</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkIgnoreCase.Checked) options |= RegexOptions.IgnoreCase;
+      <SPAN CLASS="comment">// If true, \w, \d and \s match ASCII characters only,
+      // and \10 is backreference 1 followed by a literal 0
+      // rather than octal escape 10.</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (checkECMAScript.Checked) options |= RegexOptions.ECMAScript;
+      <SPAN CLASS="reservedword">return</SPAN> options;
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnMatch_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// This method illustrates the easiest way to test if a string can be
+      // matched by a regex using the System.Text.RegularExpressions.Regex.Match
+      // static method.  This way is recommended when you only want to validate
+      // a single string every now and then.
+  
+      // Note that IsMatch() will also return True if the regex matches part of
+      // the string only.  If you only want it to return True if the regex matches
+      // the entire string, simply prepend a caret and append a dollar sign
+      // to the regex to anchor it at the start and end.
+  
+      // Note that when typing in a regular expression into textSubject,
+      // backslashes are interpreted at the regex level.
+      // So typing in \( will match a literal ( character and \\ matches a 
+      // literal backslash.  When passing literal strings in your source code, 
+      // you need to escape backslashes in strings as usual.
+      // So the string "\\(" matches a literal ( and "\\\\" matches a single
+      // literal backslash.
+      // To reduce confusion, I suggest you use verbatim strings instead:
+      // @"\(" matches a literal ( and @"\\" matches a literal backslash.
+      // You can omit the last parameter with the regex options
+      // if you don't want to specify any.</SPAN>
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      <SPAN CLASS="reservedword">try</SPAN>
+      {
+        <SPAN CLASS="reservedword">if</SPAN> (Regex.IsMatch(textSubject.Text, textRegex.Text, getRegexOptions())) {
+          textResults.Text = <SPAN CLASS="characterstring">"The regex matches part or all of the subject"</SPAN>;
+        }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+          textResults.Text = <SPAN CLASS="characterstring">"The regex cannot be matched in the subject"</SPAN>;
+        }
+      }
+      <SPAN CLASS="reservedword">catch</SPAN> (Exception ex)
+      {
+        <SPAN CLASS="comment">// Most likely cause is a syntax error in the regular expression</SPAN>
+        textResults.Text = <SPAN CLASS="characterstring">"Regex.IsMatch() threw an exception:\r\n"</SPAN> + ex.Message;
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnGetMatch_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Illustrates the easiest way to get the text of the first match
+      // using the System.Text.RegularExpressions.Regex.Match static method.
+      // Useful for easily extracting a string form another string.
+      // You can omit the last parameter with the regex options
+      // if you don't want to specify any.
+      // If there's no match, Regex.Match.Value returns an empty string.
+      // If you are only interested in part of the regex match, you can use 
+      // .Groups[3].Value instead of .Value to get the text matched between 
+      // the third pair of round brackets in the regular expression</SPAN>
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      <SPAN CLASS="reservedword">try</SPAN>
+      {
+        textResults.Text = Regex.Match(textSubject.Text, textRegex.Text, 
+                                       getRegexOptions()).Value;
+      }
+      <SPAN CLASS="reservedword">catch</SPAN> (Exception ex)
+      {
+        <SPAN CLASS="comment">// Most likely cause is a syntax error in the regular expression</SPAN>
+        textResults.Text = <SPAN CLASS="characterstring">"Regex.Match() threw an exception:\r\n"</SPAN> + ex.Message;
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnReplace_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Illustrates the easiest way to do a regex-based search-and-replace on
+      // a single string using the System.Text.RegularExpressions.Regex.Replace
+      // static method.  This method will replace ALL matches of the regex in 
+      // the subject with the replacement text.
+      // If there are no matches, Replace() returns the subject string unchanged.
+      // If you only want to replace certain matches, you have to use the method 
+      // illustrated in btnRegexObjReplace_click.
+      // You can omit the last parameter with the regex options
+      // if you don't want to specify any.
+      // In the replacement text (textReplace.Text), you can use $&amp; to insert 
+      // the entire regex match, and $1, $2, $3, etc. for the backreferences 
+      // (text matched by the part in the regex between the first, second, 
+      //  third, etc. pair of round brackets)
+      // $$ inserts a single $ character
+      // $` (dollar backtick) inserts the text in the subject 
+      /     to the left of the regex match
+      // $' (dollar single quote) inserts the text in the subject 
+      //    to the right of the end of the regex match
+      // $_ inserts the entire subject text</SPAN>
+      <SPAN CLASS="reservedword">try</SPAN>
+      {
+        textReplaceResults.Text = Regex.Replace(textSubject.Text, textRegex.Text, 
+                                  textReplace.Text, getRegexOptions());
+        textResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      }
+      <SPAN CLASS="reservedword">catch</SPAN> (Exception ex)
+      {
+        <SPAN CLASS="comment">// Most likely cause is a syntax error in the regular expression</SPAN>
+        textResults.Text = <SPAN CLASS="characterstring">"Regex.Replace() threw an exception:\r\n"</SPAN> + ex.Message;
+        textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> printSplitArray(<SPAN CLASS="reservedword">string</SPAN>[] array) {
+      textResults.Text = <SPAN CLASS="characterstring">""</SPAN>;
+      <SPAN CLASS="reservedword">for</SPAN> (<SPAN CLASS="reservedword">int</SPAN> i = <SPAN CLASS="numericconstant">0</SPAN>; i &lt; array.Length; i++) {
+        textResults.AppendText(i.ToString() + <SPAN CLASS="characterstring">": \""</SPAN> + array[i] + <SPAN CLASS="characterstring">"\"\r\n"</SPAN>);
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnSplit_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Regex.Split allows you to split a single string into an array of strings
+      // using a regular expression.  This example illustrates the easiest way 
+      // to do this; use btnRegexObjSplit_Click if you need to split many strings.
+      // The string is cut at each point where the regex matches.  The part of 
+      // the string matched by the regex is thrown away.  If the regex contains
+      // capturing parentheses, then the part of the string matched by each of 
+      // them is also inserted into the array.
+      // To summarize, the array will contain 
+      // (indenting for clarity; the array is one-dimensional):
+      // - the part of the string before the first regex match
+      //   - the part of the string captured in the first pair of parentheses 
+      //     in the first regex match
+      //   - the part of the string captured in the second pair of parentheses 
+      //     in the first regex match
+      //   - etc. until the last pair of parentheses in the first match
+      // - the part of the string after the first match, and before the 2nd match
+      //   - capturing parentheses for the second match
+      // - etc. for all regex matches
+      // - part of the string after the last regex match
+      // Tips: If you want the delimiters to be separate items in the array, 
+      //       put round brackets around the entire regex.
+      //       If you need parentheses for grouping, but don't want their results
+      //       in the array, use (?:subregex) non-capturing parentheses.
+      //       If you want the delimiters to be included with the split items 
+      //       in the array, use lookahead or lookbehind to match a position 
+      //       in the string rather than characters.
+      // E.g.: The regex "," separates a comma-delimited list, deleting the commas
+      //       The regex "(,)" separates a comma-delimited list, inserting the 
+      //       commas as separate strings into the array of strings.
+      //       The regex "(?&lt;=,)" separates a comma-delimited list, leaving the 
+      //       commas at the end of each string in the array.
+      // You can omit the last parameter with the regex options </SPAN>
+      <SPAN CLASS="comment">// if you don't want to specify any.</SPAN>
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      <SPAN CLASS="reservedword">try</SPAN>
+      {
+        printSplitArray(Regex.Split(textSubject.Text, textRegex.Text, 
+                                    getRegexOptions()));
+      }
+      <SPAN CLASS="reservedword">catch</SPAN> (Exception ex)
+      {
+        <SPAN CLASS="comment">// Most likely cause is a syntax error in the regular expression</SPAN>
+        textResults.Text = <SPAN CLASS="characterstring">"Regex.Split() threw an exception:\r\n"</SPAN> + ex.Message;
+      }
+    }
+
+    <SPAN CLASS="reservedword">private</SPAN> Regex regexObj;
+    <SPAN CLASS="reservedword">private</SPAN> Match matchObj;
+
+    <SPAN CLASS="reservedword">private void</SPAN> printMatch()
+    {
+      <SPAN CLASS="comment">// Regex.Match constructs and returns a Match object
+      // You can query this object to get all possible information about the match</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (matchObj.Success) {
+        textResults.Text = <SPAN CLASS="characterstring">"Match offset: "</SPAN> + matchObj.Index.ToString() + <SPAN CLASS="characterstring">"\r\n"</SPAN>;
+        textResults.Text += <SPAN CLASS="characterstring">"Match length: "</SPAN> + matchObj.Length.ToString() +<SPAN CLASS="characterstring">"\r\n"</SPAN>;
+        textResults.Text += <SPAN CLASS="characterstring">"Matched text: "</SPAN> + matchObj.Value + <SPAN CLASS="characterstring">"\r\n"</SPAN>;
+        <SPAN CLASS="reservedword">if</SPAN> (matchObj.Groups.Count &gt; <SPAN CLASS="numericconstant">1</SPAN>) {
+          <SPAN CLASS="comment">// matchObj.Groups[0] holds the entire regex match also held by 
+          // matchObj itself.  The other Group objects hold the matches for 
+          // capturing parentheses in the regex</SPAN>
+          <SPAN CLASS="reservedword">for</SPAN> (<SPAN CLASS="reservedword">int</SPAN> i = <SPAN CLASS="numericconstant">1</SPAN>; i &lt; matchObj.Groups.Count; i++) {
+            Group g = matchObj.Groups[i];
+            <SPAN CLASS="reservedword">if</SPAN> (g.Success) {
+              textResults.Text += <SPAN CLASS="characterstring">"Group "</SPAN> + i.ToString() + 
+                                  <SPAN CLASS="characterstring">" offset: "</SPAN> + g.Index.ToString() + <SPAN CLASS="characterstring">"\r\n"</SPAN>;
+              textResults.Text += <SPAN CLASS="characterstring">"Group "</SPAN> + i.ToString() + 
+                                  <SPAN CLASS="characterstring">" length: "</SPAN> + g.Length.ToString() + <SPAN CLASS="characterstring">"\r\n"</SPAN>;
+              textResults.Text += <SPAN CLASS="characterstring">"Group "</SPAN> + i.ToString() + 
+                                  <SPAN CLASS="characterstring">" text: "</SPAN> + g.Value + <SPAN CLASS="characterstring">"\r\n"</SPAN>;
+            }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+              textResults.Text += <SPAN CLASS="characterstring">"Group "</SPAN> + i.ToString() + 
+                                  <SPAN CLASS="characterstring">" did not participate in the overall match\r\n"</SPAN>;
+            }
+          }
+        }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+          textResults.Text += <SPAN CLASS="characterstring">"no backreferences/groups"</SPAN>;
+        }
+      }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+        textResults.Text = <SPAN CLASS="characterstring">"no match"</SPAN>;
+      }
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnRegexObj_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Clean up, in case we cannot construct the new regex object</SPAN>
+      regexObj = <SPAN CLASS="reservedword">null</SPAN>;
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      <SPAN CLASS="comment">// If you want to do many searches using the same regular expression,
+      // you should first construct a System.Text.RegularExpressions.Regex object
+      // and then call its Match method (one of the overloaded forms that does
+      // not take the regular expression as a parameter)
+      // regexOptions may be omitted if all options are off</SPAN>
+      <SPAN CLASS="reservedword">try</SPAN>
+      {
+        regexObj = <SPAN CLASS="reservedword">new</SPAN> Regex(textRegex.Text, getRegexOptions());
+        textResults.Text = <SPAN CLASS="characterstring">"Regex object constructed.  Click on one of the "</SPAN> +
+          <SPAN CLASS="characterstring">"buttons to the right of the Create Object button to use the object."</SPAN>;
+      }
+      <SPAN CLASS="reservedword">catch</SPAN> (Exception ex)
+      {
+        <SPAN CLASS="comment">// Most likely cause is a syntax error in the regular expression</SPAN>
+        textResults.Text = <SPAN CLASS="characterstring">"Regex constructor threw an exception:\r\n"</SPAN> 
+                           + ex.Message;
+        <SPAN CLASS="reservedword">return</SPAN>;
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnFirstMatch_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Find the first match using regexObj constructed in btnRegexObj_Click()
+      // and store all the details in matchObj
+      // matchObj is used in btnNextMatch_click() to find subsequent matches</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (regexObj == <SPAN CLASS="reservedword">null</SPAN>) {
+        textResults.Text = <SPAN CLASS="characterstring">"First click on Create Object to create the regular "</SPAN> +
+          <SPAN CLASS="characterstring">"expression object.  Then click on First Match to find "</SPAN> +
+          <SPAN CLASS="characterstring">"the first match in the subject string."</SPAN>;
+        textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+        matchObj = regexObj.Match(textSubject.Text);
+        printMatch();
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnNextMatch_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// Tell the regex engine to find another match after the previous match
+      // Note that even if you change textRegex.Text or textSubject.Text between
+      // clicking btnRegexObj, btnFirstMatch and btnNextMatch, the regex engine
+      // will continue to search the same subject string passed in the 
+      // regexObj.Match call in btnFirstMatch_Click using the same regular 
+      // expression passed to the Regex() constructor in btnRegexObj_Click</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (matchObj == <SPAN CLASS="reservedword">null</SPAN>) {
+        textResults.Text = <SPAN CLASS="characterstring">"Use the First Match button to find the 1st match."</SPAN> +
+                           <SPAN CLASS="characterstring">"Then use this button to find following matches."</SPAN>;
+        textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+        matchObj = matchObj.NextMatch();
+        printMatch();
+      }
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnRegexObjReplace_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// If you want to do many search-and-replace operations using the same
+      // regular expression, you should first construct a 
+      // System.Text.RegularExpressions.Regex object and then call its Replace()
+      // method (one of the overloaded forms that does not take the regular 
+      // expression as a parameter).
+      // This way also allows to to specify two additional parameters allowing 
+      // you to control how many replacements will be made.
+      // The easy way used in btnReplace_click will always replace ALL matches.
+      // See the comments with btnReplace_click for explanation of the special 
+      // $-placeholders you can use in the replacement text.
+      // You can mix calls to regexObj.Match() and regexObj.Replace() as you like.
+      // The results of the calls will not affect the other calls.</SPAN>
+      <SPAN CLASS="reservedword">if</SPAN> (regexObj == <SPAN CLASS="reservedword">null</SPAN>) {
+        textReplaceResults.Text = <SPAN CLASS="characterstring">"Please use the Create Objects button to"</SPAN> +
+          <SPAN CLASS="characterstring">"construct the regex object.\r\n"</SPAN> +
+          <SPAN CLASS="characterstring">"Then use this button to do a search-and-replace using the subject"</SPAN> +
+          <SPAN CLASS="characterstring">"and replacement texts."</SPAN>;
+      }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+        <SPAN CLASS="comment">// As used in this example, Replace() will replace ALL matches of the 
+        // regex in the subject with the replacement text.
+        // If you want to limit the number of matches replaced, specify a third
+        // parameter with the number of matches to be replaced.
+        // If you specify 3, the first (left-to-right) 3 matches will be replaced.
+        // You can also specify a fourth parameter with the character position
+        // in the subject where the regex search should begin.
+        // If the third parameter is negative, all matches after the starting
+        // position will be replaced like when the third and fourth parameters
+        // are omitted.</SPAN>
+        textReplaceResults.Text = regexObj.Replace(textSubject.Text, 
+          textReplace.Text <SPAN CLASS="comment">/*, ReplaceCount, ReplaceStart*/</SPAN> );
+      }
+      textResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+    }
+
+    <SPAN CLASS="reservedword">private void</SPAN> btnRegexObjSplit_Click(<SPAN CLASS="reservedword">object</SPAN> sender, System.EventArgs e)
+    {
+      <SPAN CLASS="comment">// If you want to split many strings using the same regular expression,
+      // you should first construct a System.Text.RegularExpressions.Regex object
+      // and then call its Split method (one of the overloaded forms that does 
+      // not take the regular expression as a parameter).
+      // See btnSplit_Click for an explanation how Split() works.
+      // If you first construct a Regex object, you can specify two additional
+      // parameters to Split() after the subject string.
+      // The optional second parameter indicates how many times Split() is 
+      // allowed to split the string.  A negative number causes the string to be
+      // split at all regex matches.  If the number is smaller than the number 
+      // of possible matches, then the last string in the returned array
+      // will contain the unsplit remainder of the string.
+      // The optional third parameter indicates the character position in the 
+      // string where Split() can start to look for regex matches.
+      // If you specify the third parameter, then the first string in the returned 
+      // array will contain the unsplit start of the string as well as
+      // the part of the string between the starting position and the first match.
+      // You can mix calls to regexObj.Match() and regexObj.Split() as you like.
+      // The results of the calls will not affect the other calls.</SPAN>
+      textReplaceResults.Text = <SPAN CLASS="characterstring">"N/A"</SPAN>;
+      <SPAN CLASS="reservedword">if</SPAN> (regexObj == <SPAN CLASS="reservedword">null</SPAN>) {
+        textResults.Text = <SPAN CLASS="characterstring">"Please use the Create Objects button to construct"</SPAN> +
+          <SPAN CLASS="characterstring">"the regular expression object.\r\n"</SPAN> +
+          <SPAN CLASS="characterstring">"Then use this button to split the subject into an array of strings."</SPAN>;
+      }&nbsp;<SPAN CLASS="reservedword">else</SPAN>&nbsp;{
+        printSplitArray(regexObj.Split(textSubject.Text) 
+                        <SPAN CLASS="comment">/*, SplitCount, SplitStart*/</SPAN> );
+      }
+    }
+
+  }
+}
+</SPAN></PRE>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="dotnetexample.html" TARGET="_top">http://www.Regular-Expressions.info/dotnetexample.html</A><BR>
+Page last updated: 22 September 2010<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><iframe class="amazonsingle" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&o=1&p=8&l=as1&asins=1449319432&md=10FE9736YVPPT7A0FBG2&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe><iframe class="amazon" marginwidth="0" marginheight="0" width="160" height="600" scrolling="no" frameborder="0" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&l=st1&search=C%23&mode=books&p=14&o=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&lt1=_blank&nou&f=ifr"></iframe><P>&nbsp;</P> <TABLE CLASS=sidead CELLSPACING=0 CELLPADDING=4> <TR><TD CLASS=sideheader>PowerGREP 4</TD></TR> <TR><TD CLASS=ad><A HREF="http://www.powergrep.com/" TARGET=_top><IMG SRC="img/pgr.gif" WIDTH=32 HEIGHT=32 ALT="PowerGREP" ALIGN=LEFT CLASS=iconleft BORDER=0></A> <A HREF="http://www.powergrep.com/" TARGET=_top>PowerGREP</A> is probably the most powerful regex-based text processing tool available today. A knowledge worker's Swiss army knife for searching through, extracting information from, and updating piles of files.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to search through large numbers of text and binary files. Quickly find the files you are looking for, or extract the information you need. Look through just a handful of files or folders, or scan entire drives and network shares.</TD></TR> <TR><TD CLASS=ad>Search and replace using text, binary data or one or more regular expressions to automate repetitive editing tasks. Preview replacements before modifying files, and stay safe with flexible backup and undo options.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to rename files, copy files, or merge and split the contents of files. Work with plain text files, Unicode files, binary files, compressed files, and files in proprietary formats such as MS Office, OpenOffice, and PDF. Runs on Windows 2000, XP, Vista, 7, and 8.</TD></TR> <TR><TD><A HREF="http://www.powergrep.com/" TARGET=_top>More information</A></TD></TR> <TR><TD><A HREF="http://www.powergrep.com/download.html" TARGET=_top>Download PowerGREP now</A></TD></TR> </TABLE><iframe class="amazon" marginwidth="0" marginheight="0" width="160" height="600" scrolling="no" frameborder="0" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&l=st1&search=vb.net&mode=books&p=14&o=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&lt1=_blank&nou&f=ifr"></iframe><div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

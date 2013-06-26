@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Regex Tutorial - Continuing at The End of The Previous Match</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad> <TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/create.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD> <TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/create.html" TARGET="_top">Easily create and understand regular expressions today</A>.</B><BR> Compose and analyze regex patterns with RegexBuddy's easy-to-grasp regex blocks and intuitive regex tree, instead of or in combination with the traditional regex syntax. Developed by the author of this website, RegexBuddy makes learning and using regular expressions easier than ever. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A></TD> </TR></TABLE>  
+<H1>Continuing at The End of The Previous Match</H1>
+
+<P>The anchor <TT CLASS=regex>\G</TT> matches at the position where the previous match ended.  During the first match attempt, <TT CLASS=regex>\G</TT> matches at the <A HREF="anchors.html#az">start of the string</A> in the way <TT CLASS=regex>\A</TT> does.</P>
+
+<P>Applying <TT CLASS=regex>\G\w</TT> to the string <TT CLASS=string>test string</TT> matches <TT CLASS=match>t</TT>.  Applying it again matches <TT CLASS=match>e</TT>.  The 3rd attempt yields <TT CLASS=match>s</TT> and the 4th attempt matches the second <TT CLASS=match>t</TT> in the string.  The fifth attempt fails.  During the fifth attempt, the only place in the string where <TT CLASS=regex>\G</TT> matches is after the second <TT>t</TT>.  But that position is not followed by a word character, so the match fails.</P>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><H2>End of The Previous Match vs. Start of The Match Attempt</H2>
+
+<P>With some regex flavors or tools, <TT CLASS=regex>\G</TT> matches at the start of the match attempt, rather than at the end of the previous match result.  This is the case with <A HREF="editpadpro.html" TARGET="_top">EditPad Pro</A>, where <TT CLASS=regex>\G</TT> matches at the position of the text cursor, rather than the end of the previous match.  When a match is found, EditPad Pro will select the match, and move the text cursor to the end of the match.  The result is that <TT CLASS=regex>\G</TT> matches at the end of the previous match result only when you do not move the text cursor between two searches.  All in all, this makes a lot of sense in the context of a text editor.</P>
+
+
+
+<H2>\G Magic with Perl</H2>
+
+<P>In <A HREF="perl.html" TARGET="_top">Perl</A>, the position where the last match ended is a "magical" value that is remembered separately for each string variable.  The position is not associated with any regular expression.  This means that you can use <TT CLASS=regex>\G</TT> to make a regex continue in a subject string where another regex left off.</P>
+
+<P>If a match attempt fails, the stored position for <TT CLASS=regex>\G</TT> is reset to the start of the string.  To avoid this, specify the continuation modifier <TT>/c</TT>.</P>
+
+<P>All this is very useful to make several regular expressions work together.  E.g. you could parse an HTML file in the following fashion:</P>
+
+<PRE><SPAN CLASS=longcode><SPAN CLASS=reservedword>while</SPAN> ($string =~ m/&lt;/g) {
+  <SPAN CLASS=reservedword>if</SPAN> ($string =~ m/\GB&gt;/c) {
+    <SPAN CLASS=comment># Bold</SPAN>
+  } <SPAN CLASS=reservedword>elsif</SPAN> ($string =~ m/\GI&gt;/c) {
+    <SPAN CLASS=comment># Italics</SPAN>
+  } <SPAN CLASS=reservedword>else</SPAN> {
+    <SPAN CLASS=comment># ...etc...</SPAN>
+  }
+}</SPAN></PRE>
+
+<P>The regex in the while loop searches for the tag's opening bracket, and the regexes inside the loop check which tag we found.  This way you can parse the tags in the file in the order they appear in the file, without having to write a single big regex that matches all tags you are interested in.</P>
+
+<H2>\G in Other Programming Languages</H2>
+
+<P>This flexibility is not available with most other programming languages.  E.g. in <A HREF="java.html" TARGET="_top">Java</A>, the position for <TT CLASS=regex>\G</TT> is remembered by the Matcher object.  The Matcher is strictly associated with a single regular expression and a single subject string.  What you can do though is to add a line of code to make the match attempt of the second Matcher start where the match of the first Matcher ended.  <TT CLASS=regex>\G</TT> will then match at this position.</P>
+
+<P>The <TT CLASS=regex>\G</TT> token is supported by the <A HREF="jgsoft.html" TARGET="_top">JGsoft engine</A>, <A HREF="dotnet.html" TARGET="_top">.NET</A>, <A HREF="java.html" TARGET="_top">Java</A>, <A HREF="perl.html" TARGET="_top">Perl</A> and <A HREF="pcre.html" TARGET="_top">PCRE</A>.</p><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="continue.html" TARGET="_top">http://www.Regular-Expressions.info/continue.html</A><BR>
+Page last updated: 17 June 2009<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tutorial</TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="tutorialcnt.html" TARGET=_top>Table&nbsp;of&nbsp;Contents</A></TD></TR><TR><TD><A HREF="characters.html" TARGET=_top>Characters</A></TD></TR><TR><TD><A HREF="engine.html" TARGET=_top>Regex&nbsp;Engine&nbsp;Internals</A></TD></TR><TR><TD><A HREF="charclass.html" TARGET=_top>Character&nbsp;Classes</A></TD></TR><TR><TD><A HREF="dot.html" TARGET=_top>Dot</A></TD></TR><TR><TD><A HREF="anchors.html" TARGET=_top>Anchors</A></TD></TR><TR><TD><A HREF="wordboundaries.html" TARGET=_top>Word&nbsp;Boundaries</A></TD></TR><TR><TD><A HREF="alternation.html" TARGET=_top>Alternation</A></TD></TR><TR><TD><A HREF="optional.html" TARGET=_top>Optional&nbsp;Items</A></TD></TR><TR><TD><A HREF="repeat.html" TARGET=_top>Repetition</A></TD></TR><TR><TD><A HREF="brackets.html" TARGET=_top>Grouping&nbsp;&amp;&nbsp;Backreferences</A></TD></TR><TR><TD><A HREF="named.html" TARGET=_top>Named&nbsp;Groups</A></TD></TR><TR><TD><A HREF="unicode.html" TARGET=_top>Unicode</A></TD></TR><TR><TD><A HREF="modifiers.html" TARGET=_top>Modifiers</A></TD></TR><TR><TD><A HREF="possessive.html" TARGET=_top>Possessive&nbsp;Quantifiers</A></TD></TR><TR><TD><A HREF="atomic.html" TARGET=_top>Atomic&nbsp;Grouping</A></TD></TR><TR><TD><A HREF="lookaround.html" TARGET=_top>Lookahead&nbsp;&amp;&nbsp;Lookbehind</A></TD></TR><TR><TD><A HREF="lookaround2.html" TARGET=_top>Lookaround,&nbsp;part&nbsp;2</A></TD></TR><TR><TD><A HREF="continue.html" TARGET=_top>Continuing&nbsp;Matches</A></TD></TR><TR><TD><A HREF="conditional.html" TARGET=_top>Conditionals</A></TD></TR><TR><TD><A HREF="xmlcharclass.html" TARGET=_top>XML&nbsp;Character&nbsp;Classes</A></TD></TR><TR><TD><A HREF="posixbrackets.html" TARGET=_top>POSIX&nbsp;Bracket&nbsp;Expressions</A></TD></TR><TR><TD><A HREF="comments.html" TARGET=_top>Comments</A></TD></TR><TR><TD><A HREF="freespacing.html" TARGET=_top>Free-Spacing</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><iframe class="amazonsingle" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&o=1&p=8&l=as1&asins=1449319432&md=10FE9736YVPPT7A0FBG2&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

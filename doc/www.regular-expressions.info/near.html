@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Find Two Words Near Each Other</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad> <TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/library.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD> <TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/library.html" TARGET="_top">Collect your own regular expression library</A> with RegexBuddy.</B><BR> RegexBuddy's regular expression library includes all the examples on this website, plus many more. Easily edit any of the regexes or create your own. Build your own personal regular expression library. It'll often come in handy and save you time when searching through files on your computer, writing applications or scripts, or processing text or data. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD> </TR></TABLE>  <h1>Find Two Words Near Each Other</h1> <p>Some search tools that use boolean operators also have a special operator called "near". Searching for "term1 near term2" finds all occurrences of term1 and term2 that occur within a certain "distance" from each other. The distance is a number of words. The actual number depends on the search tool, and is often configurable.</p> <p>You can easily perform the same task with the proper regular expression.</p> <script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><h2>Emulating “near” with a Regular Expression</h2> <p>With regular expressions you can describe almost any text pattern, including a pattern that matches two words near each other. This pattern is relatively simple, consisting of three parts: the first word, a certain number of unspecified words, and the second word. An unspecified word can be matched with the <a href="charclass.html#shorthand">shorthand character class</a> <tt class=regex>\w+</tt>. The spaces and other characters between the words can be matched with <tt class=regex>\W+</tt> (uppercase W this time).</p> <p>The complete regular expression becomes <tt class=regex>\bword1\W+(?:\w+\W+){1,6}?word2\b</tt> <A HREF="regexbuddy/near.html"><IMG SRC="img/rxb.gif" WIDTH="16" HEIGHT="16" ALIGN=middle ALT="Analyze this regular expression with RegexBuddy" BORDER=0></A>. The <A HREF="repeat.html" TARGET="_top">quantifier</A> <tt class=regex>{1,6}?</tt> makes the regex require at least one word between "word1" and "word2", and allow at most six words.</p> <p>If the words may also occur in reverse order, we need to specify the opposite pattern as well: <tt class=regex>\b(?:word1\W+(?:\w+\W+){1,6}?word2|word2\W+(?:\w+\W+){1,6}?word1)\b</tt> <A HREF="regexbuddy/near2.html"><IMG SRC="img/rxb.gif" WIDTH="16" HEIGHT="16" ALIGN=middle ALT="Analyze this regular expression with RegexBuddy" BORDER=0></A></p> <p>If you want to find any pair of two words out of a list of words, you can use: <tt class=regex>\b(word1|word2|word3)(?:\W+\w+){1,6}?\W+(word1|word2|word3)\b</tt>. This regex will also find a word near itself, e.g. it will match <tt class=match>word2 near word2</tt>.</p><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="near.html" TARGET="_top">http://www.Regular-Expressions.info/near.html</A><BR>
+Page last updated: 02 December 2010<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Examples</TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="numericranges.html" TARGET=_top>Numeric&nbsp;Ranges</A></TD></TR><TR><TD><A HREF="floatingpoint.html" TARGET=_top>Floating&nbsp;Point&nbsp;Numbers</A></TD></TR><TR><TD><A HREF="email.html" TARGET=_top>Email&nbsp;Addresses</A></TD></TR><TR><TD><A HREF="dates.html" TARGET=_top>Valid&nbsp;Dates</A></TD></TR><TR><TD><A HREF="creditcard.html" TARGET=_top>Credit&nbsp;Card&nbsp;Numbers</A></TD></TR><TR><TD><A HREF="completelines.html" TARGET=_top>Matching&nbsp;Complete&nbsp;Lines</A></TD></TR><TR><TD><A HREF="duplicatelines.html" TARGET=_top>Deleting&nbsp;Duplicate&nbsp;Lines</A></TD></TR><TR><TD><A HREF="examplesprogrammer.html" TARGET=_top>Programming</A></TD></TR><TR><TD><A HREF="near.html" TARGET=_top>Two&nbsp;Near&nbsp;Words</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Pitfalls</TD></TR><TR><TD><A HREF="catastrophic.html" TARGET=_top>Catastrophic&nbsp;Backtracking</A></TD></TR><TR><TD><A HREF="floatingpoint.html" TARGET=_top>Making&nbsp;Everything&nbsp;Optional</A></TD></TR><TR><TD><A HREF="captureall.html" TARGET=_top>Repeated&nbsp;Capturing&nbsp;Group</A></TD></TR><TR><TD><A HREF="unicode8bit.html" TARGET=_top>Mixing&nbsp;Unicode&nbsp;&amp;&nbsp;8-bit</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><iframe class="amazonsingle" src="http://rcm.amazon.com/e/cm?t=jgsbookselection&o=1&p=8&l=as1&asins=1449319432&md=10FE9736YVPPT7A0FBG2&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

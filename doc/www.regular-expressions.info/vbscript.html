@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>VBScript RegExp Object - Using Regular Expressions with Client Side Scripting</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="Detailed description of the capabilities of the VBScript RegExp Object">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/vbscript.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/vbscript.html" TARGET="_top">Easily use the power of regular expressions with VBScript</A> and RegexBuddy.</B><BR>
+Create and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Implement regexes in VBScript with instant code snippets.  Just tell RegexBuddy what you want to achieve, and copy and paste the auto-generated VBScript code. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD>
+</TR></TABLE>
+
+
+<H1>VBScript’s Regular Expression Support</H1>
+
+<P>VBScript has built-in support for regular expressions.  If you use VBScript to validate user input on a web page at the client side, using VBScript's regular expression support will greatly reduce the amount of code you need to write.</P>
+
+<P>Microsoft made some significant enhancements to VBScript's regular expression support in version 5.5 of Internet Explorer.  Version 5.5 implements quite a few essential regex features that were missing in previous versions of VBScript.  Internet Explorer 6.0 does not expand the regular expression functionality.  Whenever this website mentions VBScript, the statements refer to VBScript's version 5.5 regular expression support.</P>
+
+<p>In fact, the regular expression flavor used in the version 5.5 VBScript object is the same one used by <A HREF="javascript.html" TARGET="_top">JavaScript and JScript</A>.  The regex flavor is part of the ECMA-262 standard for JavaScript.  Therefore, everything said about JavaScript's regular expression flavor on this website also applies to VBScript.  The only exception is the character escape support for \xFF and  in the <A HREF="refreplace.html" TARGET="_top">replacement text</A>.  JavaScript supports these in string literals, but VBScript does not.</p>
+
+<P>JavaScript and VBScript implement Perl-style regular expressions.  However, they lack quite a number of advanced features available in <A HREF="perl.html" TARGET="_top">Perl</A> and other modern <A HREF="refflavors.html" TARGET="_top">regular expression flavors</A>:</P>
+
+<ul>
+<li>No <a href="anchors.html#az">\A or \Z anchors</a> to match the start or end of the string.  Use a <A HREF="anchors.html" TARGET="_top">caret or dollar</A> instead.
+<li><a href="lookaround.html#lookbehind">Lookbehind</a> is not supported at all.  <a href="lookaround.html#lookahead">Lookahead</a> is fully supported.
+<li>No <A HREF="atomic.html" TARGET="_top">atomic grouping</A> or <A HREF="possessive.html" TARGET="_top">possessive quantifiers</A>
+<li>No <A HREF="unicode.html" TARGET="_top">Unicode</A> support, except for matching single characters with <tt></tt>
+<li>No <A HREF="named.html" TARGET="_top">named capturing groups</A>.  Use <A HREF="brackets.html" TARGET="_top">numbered capturing groups</A> instead.
+<li>No <A HREF="modifiers.html" TARGET="_top">mode modifiers</A> to set matching options within the regular expression.
+<li>No <A HREF="conditional.html" TARGET="_top">conditionals</A>.
+<li>No <A HREF="comments.html" TARGET="_top">regular expression comments</A>.  Describe your regular expression with VBScript apostrophe comments instead, outside the regular expression string.
+</ul>
+
+<P>Version 1.0 of the RegExp object even lacks basic features like <a href="repeat.html#lazy">lazy quantifiers</a>.  This is the main reason this website does not discuss VBScript RegExp 1.0.  All versions of Internet Explorer prior to 5.5 include version 1.0 of the RegExp object.  There are no other versions than 1.0 and 5.5.</P>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><H2>How to Use the VBScript RegExp Object</H2>
+
+<P>You can use regular expressions in VBScript by creating one or more instances of the <TT>RegExp</TT> object.  This object allows you to find regular expression matches in strings, and replace regex matches in strings with other strings.  The functionality offered by VBScript's RegExp object is pretty much bare bones.  However, it's more than enough for simple input validation and output formatting tasks typically done in VBScript.</P>
+
+<p>The advantage of the RegExp object's bare-bones nature is that it's very easy to use.  Create one, put in a regex, and let it match or replace.  Only four properties and three methods are available.</p>
+
+<p>After creating the object, assign the regular expression you want to search for to the <tt><b>Pattern</b></tt> property.  If you want to use a literal regular expression rather than a user-supplied one, simply put the regular expression in a double-quoted string.  By default, the regular expression is case sensitive.  Set the <tt><b>IgnoreCase</b></tt> property to True to make it case insensitive.  The <A HREF="anchors.html" TARGET="_top">caret and dollar</A> only match at the very start and very end of the subject string by default.  If your subject string consists of multiple lines separated by line breaks, you can make the caret and dollar <a href="anchors.html#multi">match at the start and the end of those lines</a> by setting the <tt><b>Multiline</b></tt> property to True.  VBScript does not have an option to <a href="dot.html#nodotall">make the dot match line break characters</a>.  Finally, if you want the RegExp object to return or replace all matches instead of just the first one, set the <tt><b>Global</b></tt> property to True.</p>
+
+<PRE><SPAN CLASS=longcode>'Prepare a regular expression object
+Set myRegExp = New RegExp
+myRegExp.IgnoreCase = True
+myRegExp.Global = True
+myRegExp.Pattern = "regex"</span></pre>
+
+<p>After setting the RegExp object's properties, you can invoke one of the three methods to perform one of three basic tasks.  The <tt><b>Test</b></tt> method takes one parameter: a string to test the regular expression on.  <tt>Test</tt> returns True or False, indicating if the regular expression matches (part of) the string.  When validating user input, you'll typically want to check if the <i>entire</i> string matches the regular expression.  To do so, put a <A HREF="anchors.html" TARGET="_top">caret</A> at the start of the regex, and a <A HREF="anchors.html" TARGET="_top">dollar</A> at the end, to anchor the regex at the start and end of the subject string.</p>
+
+<p>The <tt><b>Execute</b></tt> method also takes one string parameter.  Instead of returning True or False, it returns a <tt>MatchCollection</tt> object.  If the regex could not match the subject string at all, <tt>MatchCollection.Count</tt> will be zero.  If the <tt>RegExp.Global</tt> property is False (the default), <tt>MatchCollection</tt> will contain only the first match.  If <tt>RegExp.Global</tt> is true, <tt>Matches></tt> will contain all matches.</p>
+
+<p>The <tt><b>Replace</b></tt> method takes two string parameters.  The first parameter is the subject string, while the second parameter is the replacement text.  If the <tt>RegExp.Global</tt> property is False (the default), <tt>Replace</tt> will return the subject string with the first regex match (if any) substituted with the replacement text.  If <tt>RegExp.Global</tt> is true, <tt>Replace</tt> will return the subject string with all regex matches replaced.</p>  
+
+<p>You can specify an empty string as the replacement text.  This will cause the <tt>Replace</tt> method to return the subject string will all regex matches deleted from it.  To re-insert the regex match as part of the replacement, include <tt class=string>$&</tt> in the replacement text.  E.g. to enclose each regex match in the string between square brackets, specify <tt class=string>[$&]</tt> as the replacement text.  If the regexp contains <A HREF="brackets.html" TARGET="_top">capturing parentheses</A>, you can use <A HREF="brackets.html" TARGET="_top">backreferences</A> in the replacement text.  <TT CLASS=code>$1</TT> in the replacement text inserts the text matched by the first capturing group, <TT CLASS=code>$2</TT> the second, etc. up to <TT CLASS=code>$9</TT>.  To include a literal dollar sign in the replacements, put two consecutive dollar signs in the string you pass to the <tt>Replace</tt> method.</P>
+
+<H2>Getting Information about Individual Matches</H2>
+
+<p>The <tt><b>MatchCollection</b></tt> object returned by the <tt>RegExp.Execute</tt> method is a collection of <tt>Match</tt> objects.  It has only two read-only properties.  The <tt><b>Count</b></tt> property indicates how many matches the collection holds.  The <tt><b>Item</b></tt> property takes an index parameter (ranging from zero to <tt>Count-1</tt>), and returns a <tt>Match</tt> object.  The <tt>Item</tt> property is the default member, so you can write <tt class=code>MatchCollection(7)</tt> as a shorthand to <tt>MatchCollection.Item(7)</tt>.</p>
+
+<p>The easiest way to process all matches in the collection is to use a For Each construct, e.g.:</p>
+
+<pre><span class=longcode>' Pop up a message box for each match
+Set myMatches = myRegExp.Execute(subjectString)
+For Each myMatch in myMatches
+  msgbox myMatch.Value, 0, "Found Match"
+Next</span></pre>
+
+<p>The <tt><b>Match</b></tt> object has four read-only properties.  The <tt><b>FirstIndex</b></tt> property indicates the number of characters in the string to the left of the match.  If the match was found at the very start of the string, <tt>FirstIndex</tt> will be zero.  If the match starts at the second character in the string, <tt>FirstIndex</tt> will be one, etc.  Note that this is different from the VBScript <tt>Mid</tt> function, which extracts the first character of the string if you set the <tt>start</tt> parameter to one.  The <tt><b>Length</b></tt> property of the <tt>Match</tt> object indicates the number of characters in the match.  The <tt><b>Value</b></tt> property returns the text that was matched.</p>
+
+<p>The <tt><b>SubMatches</b></tt> property of the <tt>Match</tt> object is a collection of strings.  It will only hold values if your regular expression has <A HREF="brackets.html" TARGET="_top">capturing groups</A>.  The collection will hold one string for each capturing group.  The <tt><b>Count</b></tt> property indicates the number of string in the collection.  The <tt><b>Item</b></tt> property takes an index parameter, and returns the text matched by the capturing group.  The <tt>Item</tt> property is the default member, so you can write <tt class=code>SubMatches(7)</tt> as a shorthand to <tt>SubMatches.Item(7)</tt>.  Unfortunately, VBScript does not offer a way to retrieve the match position and length of capturing groups.</p>
+
+<p>Also unfortunately is that the SubMatches property does <i>not</i> hold the complete regex match as <tt class=code>SubMatches(0)</tt>.  Instead, SubMatches(0) holds the text matched by the first capturing group, while SubMatches(SubMatches.Count-1) holds the text matched by the last capturing group.  This is different from most other programming languages.  E.g. in <A HREF="dotnet.html" TARGET="_top">VB.NET</A>, <tt>Match.Groups(0)</tt> returns the whole regex match, and <tt>Match.Groups(1)</tt> returns the first capturing group's match.  Note that this is also different from the backreferences you can use in the replacement text passed to the <tt>RegExp.Replace</tt> method.  In the replacement text, $1 inserts the text matched by the first capturing group, just like most other regex flavors do.  $0 is not substituted with anything but inserted literally.</p>
+
+<H2>Test VBScript’s RegExp Support In Your Web Browser</H2>
+
+<P>I have created an <A HREF="vbscriptexample.html" TARGET="_top">example web page showing VBScript's regex support</A> in action.  If you're using Internet Explorer, you can try it right now in your web browser.  Source code is displayed below the example.</P>
+
+<h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="vbscript.html" TARGET="_top">http://www.Regular-Expressions.info/vbscript.html</A><BR>
+Page last updated: 26 January 2011<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><P>&nbsp;</P> <TABLE CLASS=sidead CELLSPACING=0 CELLPADDING=4> <TR><TD CLASS=sideheader>PowerGREP 4</TD></TR> <TR><TD CLASS=ad><A HREF="http://www.powergrep.com/" TARGET=_top><IMG SRC="img/pgr.gif" WIDTH=32 HEIGHT=32 ALT="PowerGREP" ALIGN=LEFT CLASS=iconleft BORDER=0></A> <A HREF="http://www.powergrep.com/" TARGET=_top>PowerGREP</A> is probably the most powerful regex-based text processing tool available today. A knowledge worker's Swiss army knife for searching through, extracting information from, and updating piles of files.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to search through large numbers of text and binary files. Quickly find the files you are looking for, or extract the information you need. Look through just a handful of files or folders, or scan entire drives and network shares.</TD></TR> <TR><TD CLASS=ad>Search and replace using text, binary data or one or more regular expressions to automate repetitive editing tasks. Preview replacements before modifying files, and stay safe with flexible backup and undo options.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to rename files, copy files, or merge and split the contents of files. Work with plain text files, Unicode files, binary files, compressed files, and files in proprietary formats such as MS Office, OpenOffice, and PDF. Runs on Windows 2000, XP, Vista, 7, and 8.</TD></TR> <TR><TD><A HREF="http://www.powergrep.com/" TARGET=_top>More information</A></TD></TR> <TR><TD><A HREF="http://www.powergrep.com/download.html" TARGET=_top>Download PowerGREP now</A></TD></TR> </TABLE></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

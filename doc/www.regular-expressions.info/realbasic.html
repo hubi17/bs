@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>REALbasic Regular Expressions - RegEx Class</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="Explanation how you can use regular expressions in REALbasic with its built-in RegEx class">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/realbasic.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/realbasic.html" TARGET="_top">Easily use the power of regular expressions in your REALbasic applications</A> with RegexBuddy.</B><BR>
+Create and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Implement regexes in your applications with instant REALbasic code snippets.  Just tell RegexBuddy what you want to achieve, and copy and paste the auto-generated REALbasic code. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD>
+</TR></TABLE>
+
+
+<H1>How to Use Regular Expressions in REALbasic</H1>
+
+<p>REALbasic includes a built-in RegEx class.  Internally, this class is based on the open source <A HREF="pcre.html" TARGET="_top">PCRE library</A>.  What this means to you as a REALbasic developer is that the RegEx class provides you with a rich flavor of Perl-compatible regular expressions.  The <A HREF="tutorial.html" TARGET="_top">regular expression tutorial</A> on this website   does not explicitly mention REALbasic.  Everything said in the tutorial about PCRE's regex flavor also applies to REALbasic.  The only exception are the case insensitive and "multi-line" <A HREF="modifiers.html" TARGET="_top">matching modes</A>.  In PCRE, they're off by default, while in REALbasic they're on by default.</p>
+
+<p>REALbasic uses the UTF-8 version of PCRE.  This means that if you want to process non-ASCII data that you've retrieved from a file or the network, you'll need to use REALbasic's TextConverter class to convert your strings into UTF-8 before passing them to the RegEx object.  You'll also need to use the TextConverter to convert the strings returned by the RegEx class from UTF-8 back into the encoding your application is working with.</p>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><h2>The RegEx Class</h2>
+
+<p>To use a regular expression, you need to create a new instance of the RegEx class.  Assign your regular expression to the SearchPattern property.  You can set various options in the Options property, which is an instance of the RegExOptions class.</p>
+
+<p>To check if a regular expression matches a particular string, call the Search method of the RegEx object, and pass the subject string as a parameter.  This method returns an instance of the RegExMatch class if a match is found, or Nil if no match is found.  To find the second match in the same subject string, call the Search method again, without any parameters.  Do not pass the subject string again, since doing so restarts the search from the beginning of the string.  Keep calling Search without any parameters until it returns Nil to iterate over all regular expression matches in the string.</p>
+
+<h2>The RegExMatch Class</h2>
+
+<p>When the Regex.Search method finds a match, it stores the match's details in a RegExMatch object.  This object has three properties.  The SubExpressionCount property returns the number of <A HREF="brackets.html" TARGET="_top">capturing groups</A> in the regular expression <i>plus one</i>.  E.g. it returns 3 for the regex <tt class=regex>(1)(2)</tt>.  The SubExpressionString property returns the substring matched by the regular expression or a capturing group.  SubExpressionString(0) returns the whole regex match, while SubExpressionString(1) through SubExpressionString(SubExpressionCount-1) return the matches of the capturing group.  SubExpressionStartB returns the byte offset of the start of the match of the whole regex or one of the capturing groups depending on the numeric index you pass as a parameter to the property.</p>
+
+<h2>The RegExOptions Class</h2>
+
+<p>The RegExOptions class has nine properties to set various options for your regular expression.</p>
+
+<ul>
+<li>Set CaseSensitive (False by default) to True to treat uppercase and lowercase letters as different characters.  This option is the <i>inverse</i> of "case insensitive mode" or /i in other programming languages.
+<li>Set DotMatchAll (False by default) to True to make the <A HREF="dot.html" TARGET="_top">dot</A> match all characters, including line break characters.  This option is the equivalent of "single line mode" or /s in other programming languages.
+<li>Set Greedy (True by default) to False if you want quantifiers to be lazy, effectively making <tt class=regex>.*</tt> the same as <tt class=regex>.*?</tt>.  I strongly recommend against setting Greedy to False.  Simply use the <tt class=regex>.*?</tt> syntax instead.  This way, somebody reading your source code will clearly see when you're using greedy quantifiers and when you're using lazy quantifiers when they look only at the regular expression.
+<li>The LineEndType option is the only one that takes an Integer instead of a Boolean.  This option affect which character the <A HREF="anchors.html" TARGET="_top">caret and dollar</A> treat as the "end of line" character.  The default is 0, which accepts both \r and \n as end-of-line characters.  Set it to 1 to use auto-detect the host platform, and use \n when your application runs on Windows and Linux, and \r when it runs on a Mac.  Set it to 2 for Mac (\r), 3 for Windows (\n) and 4 for UNIX (\n).  I recommend you leave this option as zero, which is most likely to give you the results you intended.  This option is actually a modification to the PCRE library made in REALbasic.  PCRE supports only option 4, which often confuses Windows developers since it causes <tt class=regex>test$</tt> to fail against <tt class=string>test\r\n</tt> as Windows uses \r\n for line breaks.
+<li>Set MatchEmpty (True by default) to False if you want to skip zero-length matches.
+<li>Set ReplaceAllMatches (False by default) to True if you want the Regex.Replace method to search-and-replace all regex matches in the subject string rather than just the first one.
+<li>Set StringBeginIsLineBegin (True by default) to False if you don't want the start of the string to be considered the start of the line.  This can be useful if you're processing a large chunk of data as several separate strings, where only the first string should be considered as starting the (conceptual) overall string.
+<li>Similarly, set StringEndIsLineEnd (True by default) to False if the string you're passing to the Search method isn't really the end of the whole chunk of data you're processing.
+<li>Set TreatTargetAsOneLine (False by default) to make the <A HREF="anchors.html" TARGET="_top">caret and dollar</A> match at the start and the end of the string only.  By default, they will also match after and before embedded line breaks.  This option is the <i>inverse</i> of the "multi-line mode" or /m in other programming languages.
+</ul>
+
+<h2>REALbasic RegEx Source Code Example</h2>
+
+<PRE><SPAN CLASS=longcode>'Prepare a regular expression object
+Dim myRegEx As RegEx
+Dim myMatch As RegExMatch
+myRegEx = New RegEx
+myRegEx.Options.TreatTargetAsOneLine = True
+myRegEx.SearchPattern = "regex"
+'Pop up all matches one by one
+myMatch = myRegEx.Search(SubjectString)
+While myMatch &lt;&gt; Nil
+	MsgBox(myMatch.SubExpressionString(0))
+	myMatch = myRegEx.Search()
+Wend
+</span></pre>
+
+<h2>Searching and Replacing</h2>
+
+<p>In addition to finding regex matches in a string, you can replace the matches with another string.  To do so, set the ReplacementPattern property of your RegEx object, and then call the Replace method.  Pass the source string as a parameter to the Replace method.  The method will return a copy of the string with the replacement(s) applied.  The RegEx.Options.ReplaceAllMatches property determines if only the first regex match or if all regex matches will be replaced.</p>
+
+<p>In the ReplacementPattern string, you can use <tt>$&</tt>, <tt>$0</tt> or <tt>\0</tt> to insert the whole regular expression match into the replacement.  Use <tt>$1</tt> or <tt>\1</tt> for the match of the first <A HREF="brackets.html" TARGET="_top">capturing group</A>, <tt>$2</tt> or <tt>\2</tt> for the second, etc.</p>
+
+<p>If you want more control over how the replacements are made, you can iterate over the regex matches like in the code snippet above, and call the RegExMatch.Replace method for each match.  This method is a bit of a misnomer, since it doesn't actually replace anything.  Rather, it returns the RegEx.ReplacementPattern string with all references to the match and capturing groups substituted.  You can use this results to make the replacements on your own.  This method is also useful if you want to collect a combination of capturing groups for each regex match.</p><h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="realbasic.html" TARGET="_top">http://www.Regular-Expressions.info/realbasic.html</A><BR>
+Page last updated: 26 January 2011<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>

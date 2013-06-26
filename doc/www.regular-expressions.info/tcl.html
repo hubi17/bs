@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Tcl regexp and regsub - Regular Expressions in Tcl</TITLE>
+<script src="regex.js" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Regex Guru" href="http://www.regexguru.com/feed/">
+<META NAME="Author" CONTENT="Jan Goyvaerts">
+<META NAME="Description" CONTENT="Learn how to use regular expressions with Tcl's regexp and regsub commands">
+<META NAME="Keywords" CONTENT="">
+<LINK REL=StyleSheet HREF="regex.css" TYPE="text/css">
+</HEAD>
+<BODY BGCOLOR=white TEXT=black>
+<script type="text/javascript">window.onresize = movecontent;</script>
+<DIV id=top><DIV id=logo><IMG SRC="img/logo.gif" WIDTH=530 HEIGHT=100></DIV></DIV>
+<div id=btntop><table align=center cellspacing=0 cellpadding=0 border=0><tr><td><a href="tutorial.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tutorial</div></a></td><td><a href="tools.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Tools&nbsp;&amp;&nbsp;Languages</div></a></td><td><a href="examples.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Examples</div></a></td><td><a href="books.html" target="_top"><div onmouseover="this.style.backgroundColor='#33A000';this.style.backgroundImage='url(img/btnhot.gif)';" onmouseout="this.style.backgroundColor='#A03300';this.style.backgroundImage='url(img/btn.gif)';return false;">Books&nbsp;&amp;&nbsp;Reference</div></a></td></tr></table></div>
+<DIV id=bodytext>
+<script type="text/javascript">movecontent();</script>
+<TABLE CLASS=topad>
+<TR><TD VALIGN=top><A HREF="http://www.regexbuddy.com/tcl.html" TARGET="_top"><IMG SRC="img/regexbuddyad.png" width=203 height=145 ALT="RegexBuddy" BORDER=0></A></TD>
+<TD CLASS=topad><B><A HREF="http://www.regexbuddy.com/tcl.html" TARGET="_top">Easily use the power of regular expressions with Tcl</A> and RegexBuddy.</B><BR>
+Create and analyze regex patterns with RegexBuddy's intuitive regex building blocks.  Implement regexes in your Ruby scripts with instant code snippets.  Just tell RegexBuddy what you want to achieve, and copy and paste the auto-generated Tcl commands. <A HREF="http://www.regexbuddy.com/">Get your own copy of RegexBuddy now</A>.</TD>
+</TR></TABLE>
+
+
+<H1>Tcl Has Three Regular Expression Flavors</H1>
+
+<P>Tcl 8.2 and later support three regular expression flavors.  The Tcl man pages dub them Basic Regular Expressions (BRE), Extended Regular Expressions (ERE) and Advanced Regular Expressions (ARE). BRE and ERE are mainly for backward compatibility with previous versions of Tcl.  These flavor implement the two flavors defined in the <A HREF="posix.html" TARGET="_top">POSIX standard</A>.  AREs are new in Tcl 8.2.  They're the default and recommended flavor.  This flavor implements the POSIX ERE flavor, with a whole bunch of added features.  Most of these features are inspired by similar features in <A HREF="perl.html" TARGET="_top">Perl regular expressions</A>.<p>
+
+<p>Tcl's regular expression support is based on a library developed for Tcl by Henry Spencer.  This library has since been used in a number of other programming languages and applications, such as the <A HREF="postgresql.html" TARGET="_top">PostgreSQL database</A> and the wxWidgets GUI library for C++.  Everything said about Tcl in this <A HREF="tutorial.html" TARGET="_top">regular expression tutorial</A> applies to any tool that uses Henry Spencer's Advanced Regular Expressions.</p>
+
+<p>There are a number of important differences between Tcl Advanced Regular Expressions and Perl-style regular expressions.  Tcl uses <tt class=regex>\m</tt>, <tt class=regex>\M</tt>, <tt class=regex>\y</tt> and <tt class=regex>\Y</tt> for <A HREF="wordboundaries.html" TARGET="_top">word boundaries</A>.  Perl and most other modern regex flavors use <tt class=regex>\b</tt> and <tt class=regex>\B</tt>.  In Tcl, these last two match a backspace and a backslash, respectively.</P>
+
+<P><a name="modifiers"></a>Tcl also takes a completely different approach to <A HREF="modifiers.html" TARGET="_top">mode modifiers</A>.  The <tt class=code>(?letters)</tt> syntax is the same, but the available mode letters and their meanings are quite different.  Instead of adding mode modifiers to the regular expression, you can pass more descriptive switches like <tt>-nocase</tt> to the <tt>regexp</tt> and <tt>regsub</tt> commands for some of the modes.  Mode modifier spans in the style of <tt class=code>(?modes:regex)</tt> are not supported.  Mode modifiers must appear at the start of the regex.  They affect the whole regex.  Mode modifiers in the regex override command switches.  Tcl supports these modes:</p>
+
+<UL>
+<LI><TT class="regex">(?i)</tt> or <TT CLASS=code>-nocase</TT> makes the regex match case insensitive.
+<LI><TT class="regex">(?c)</tt> makes the regex match case sensitive.  This mode is the default.
+<LI><TT class="regex">(?x)</tt> or <TT CLASS=code>-expanded</TT> activates the <A HREF="freespacing.html" TARGET="_top">free-spacing regexp syntax</A>.
+<LI><TT class="regex">(?t)</tt> disables the <A HREF="freespacing.html" TARGET="_top">free-spacing regexp syntax</A>.  This mode is the default.  The "t" stands for "tight", the opposite of "expanded".
+<li><tt class="regex">(?b)</tt> tells Tcl to interpret the remainder of the regular expression as a <a href="posix.html#bre">Basic Regular Expression</a>.
+<li><tt class="regex">(?e)</tt> tells Tcl to interpret the remainder of the regular expression as an <a href="posix.html#ere">Extended Regular Expression</a>.
+<li><tt class="regex">(?q)</tt> tells Tcl to interpret the remainder of the regular expression as plain text.  The "q" stands for "quoted".
+<li><tt class="regex">(?s)</tt> selects "non-newline-sensitive matching", which is the default.  The "s" stands for "single line".  In this mode, the <A HREF="dot.html" TARGET="_top">dot</A> and <a href="charclass.html#negated">negated character classes</a> will match all characters, including newlines.  The <A HREF="anchors.html" TARGET="_top">caret and dollar</A> will match only at the very start and end of the subject string.
+<li><tt class="regex">(?p)</tt> or <tt class=code>-linestop</tt> enables "partial newline-sensitive matching".  In this mode, the <A HREF="dot.html" TARGET="_top">dot</A> and <a href="charclass.html#negated">negated character classes</a> will not match newlines.  The <A HREF="anchors.html" TARGET="_top">caret and dollar</A> will match only at the very start and end of the subject string.
+<li><tt class="regex">(?w)</tt> or <tt class=code>-lineanchor</tt> enables "inverse partial newline-sensitive matching".  The "w" stands for "weird".  (Don't look at me!  I didn't come up with this.)  In this mode, the <A HREF="dot.html" TARGET="_top">dot</A> and <a href="charclass.html#negated">negated character classes</a> will match all characters, including newlines.  The <A HREF="anchors.html" TARGET="_top">caret and dollar</A> will match after and before newlines.
+<LI><TT class="regex">(?n)</tt> or <TT CLASS=code>-line</tt> enables what Tcl calls "newline-sensitive matching".  The <A HREF="dot.html" TARGET="_top">dot</A> and <a href="charclass.html#negated">negated character classes</a> will not match newlines.  The <A HREF="anchors.html" TARGET="_top">caret and dollar</A> will match after and before newlines.  Specifying <TT class="regex">(?n)</tt> or <TT CLASS=code>-line</tt> is the same as specifying <TT class="regex">(?pw)</tt> or <TT CLASS=code>-linestop -lineanchor</tt>.
+<li><tt class="regex">(?m)</tt> is a historical synonym for <tt class=regex>(?n)</tt>.
+</UL>
+
+<p>If you use regular expressions with Tcl and other programming languages, be careful when dealing with the newline-related matching modes.  Tcl's designers found Perl's <tt class=code>/m</tt> and <tt class=code>/s</tt> modes confusing.  They are confusing, but at least Perl has only two, and they both affect only one thing.  In Perl, <tt class=code>/m</tt> or <tt class="regex">(?m)</tt> enables "multi-line mode", which makes the <A HREF="anchors.html" TARGET="_top">caret and dollar</A> match after and before newlines.  By default, they match at the very start and end of the string only.  In Perl, <tt class=code>/s</tt> or <tt class="regex">(?s)</tt> enables "single line mode".  This mode makes the <A HREF="dot.html" TARGET="_top">dot</A> match all characters, including line break.  By default, it doesn't match line breaks.  Perl does not have a mode modifier to exclude line breaks from <a href="charclass.html#negated">negated character classes</a>.  In Perl, <tt class="regex">[^a]</tt> matches anything except <tt class=string>a</tt>, including newlines.  The only way to exclude newlines is to write <tt class="regex">[^a\n]</tt>.  Perl's default matching mode is like Tcl's <tt class="regex">(?p)</tt>, except for the difference in negated character classes.</p>
+
+<p>Why compare Tcl with Perl?  <A HREF="dotnet.html" TARGET="_top">.NET</A>, <A HREF="java.html" TARGET="_top">Java</A>, <A HREF="pcre.html" TARGET="_top">PCRE</A> and <A HREF="python.html" TARGET="_top">Python</A> support the same <tt class="regex">(?m)</tt> and <tt class="regex">(?s)</tt> modifiers with the exact same defaults and effects as in Perl.  <A HREF="javascript.html" TARGET="_top">JavaScript</A> lacks <tt class=code>/s</tt> and <A HREF="ruby.html" TARGET="_top">Ruby</A> lacks <tt class=code>/m</tt>, but at least they don't introduce completely different options.  Negated character classes work the same in all these languages and libraries.  It's unfortunate that Tcl didn't follow Perl's standard, since Tcl's four options are just as confusing as Perl's two options.  Together they make a very nice alphabet soup.</p>
+
+<p>If you ignore the fact that Tcl's options affect negated character classes, you can use the following table to translate between Tcl's newline modes and Perl-style newline modes.  Note that the defaults are different.  If you don't use any switches, <tt class=regex>(?s).</tt> and <tt class=regex>.</tt> are equivalent in Tcl, but not in Perl.</p>
+
+<table border=1 cellspacing=0 cellpadding=4 class=body>
+<tr><th>Tcl</th><th>Perl</th><th>Anchors</th><th>Dot</th></tr>
+<tr><td><tt class=regex>(?s)</tt> (default)</td><td><tt class=regex>(?s)</tt></td><td>Start and end of string only</td><td>Any character</td></tr>
+<tr><td><tt class=regex>(?p)</tt></td><td>(default)</td><td>Start and end of string only</td><td>Any character except newlines</td></tr>
+<tr><td><tt class=regex>(?w)</tt></td><td><tt class=regex>(?sm)</tt></td><td>Start and end of string, and at newlines</td><td>Any character</td></tr>
+<tr><td><tt class=regex>(?n)</tt></td><td><tt class=regex>(?m)</tt></td><td>Start and end of string, and at newlines</td><td>Any character except newlines</td></tr>
+</table>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><H2>Regular Expressions as Tcl Words</H2>
+
+<P>You can insert regular expressions in your Tcl source code either by enclosing them with double quotes (e.g. <tt class=code>"my regexp"</tt>) or by enclosing them with curly braces (e.g. <tt class=code>{my regexp}</tt>.  Since the braces don't do any substitution like the quotes, they're by far the best choice for regular expressions.</p>
+
+<p>The only thing you need to worry about is that unescaped braces in the regular expression must be balanced.  Escaped braces don't need to be balanced, but the backslash used to escape the brace remains part of the regular expression.  You can easily satisfy these requirements by escaping all braces in your regular expression, except those used as a <a href="repeat.html#limit">quantifier</a>.  This way your regex will work as expected, and you don't need to change it at all when pasting it into your Tcl source code, other than putting a pair of braces around it.</p>
+
+<p>The regular expression <tt class=regex>^\{\d{3}\\$</tt> matches a string that consists entirely of an opening brace, three digits and one backslash.  In Tcl, this becomes <tt>{^\{\d+{3}$\\}</tt>.  There's no doubling of backslashes or any sort of escaping needed, as long as you escape literal braces in the regular expression.  <tt class=regex>{</tt> and <tt class=regex>\{</tt> are both valid regular expressions to match a single opening brace in a Tcl ARE (and any Perl-style regex flavor, for that matter).  Only the latter will work correctly in a Tcl literal enclosed with braces.</p>
+
+<H2>Finding Regex Matches</H2>
+
+<P>It Tcl, you can use the <tt>regexp</tt> command to test if a regular expression matches (part of) a string, and to retrieve the matched part(s).  The syntax of the command is:</p>
+
+<p><tt><b>regexp</b></tt> <i>?switches? regexp subject ?matchvar? ?group1var group2var ...?</i></p>
+
+<p>Immediately after the <tt>regexp</tt> command, you can place zero or more switches from the list above to indicate how Tcl should apply the regular expression.  The only required parameters are the regular expression and the subject string.  You can specify a literal regular expression using braces as I just explained.  Or, you can reference any string variable holding a regular expression read from a file or user input.</p>
+
+<p>If you pass the name of a variable as an additional argument, Tcl will store the part of the string matched by the regular expression into that variable.  Tcl will <i>not</i> set the variable to an empty string if the match attempt fails.  If the regular expressions has capturing groups, you can add additional variable names to capture the text matched by each group.  If you specify fewer variables than the regex has capturing groups, the text matched by the additional groups is not stored.  If you specify more variables than the regex has capturing groups, the additional variables will be set to an empty string if the overall regex match was successful.</p>
+
+<p>The <tt>regexp</tt> command returns 1 if (part of) the string could be matched, and zero if there's no match. The following script applies the regular expression <tt class=regex>my regex</tt> case insensitively to the string stored in the variable <tt>subjectstring</tt> and displays the result:</p>
+
+<pre><span class=longcode><b>if</b> [
+  <b>regexp</b> -nocase {my regex} $subjectstring matchresult
+] then {
+  <b>puts</b> $matchresult
+} else {
+  <b>puts</b> "my regex could not match the subject string"
+}</span></pre>
+
+<p>The <tt>regexp</tt> command supports three more switches that aren't regex mode modifiers.  The <tt><b>-all</b></tt> switch causes the command to return a number indicating how many times the regex could be matched.  The variables storing the regex and group matches will store the last match in the string only.</p>
+
+<p>The <tt><b>-inline</b></tt> switch tells the <tt>regexp</tt> command to return an array with the substring matched by the regular expression and all substrings matched by all capturing groups.  If you also specify the <tt>-all</tt> switch, the array will contain the first regex match, all the group matches of the first match, then the second regex match, the group matches of the first match, etc.</p>
+
+<p>The <tt><b>-start</b></tt> switch must be followed by a number (as a separate Tcl word) that indicates the character offset in the subject string at which Tcl should attempt the match.  Everything before the starting position will be invisible to the regex engine.  This means that <tt class=regex>\A</tt> will match at the character offset you specify with <tt>-start</tt>, even if that position is not at the start of the string.</p>
+
+<H2>Replacing Regex Matches</H2>
+
+<P>With the <tt>regsub</tt> command, you can replace regular expression matches in a string.</p>
+
+<p><tt><b>regsub</b></tt> <i>?switches? regexp replacement subject ?resultvar?</i></p>
+
+<p>Just like the <tt>regexp</tt> command, <tt>regsub</tt> takes zero or more switches followed by a regular expression.  It supports the same switches, except for <tt>-inline</tt>.  Remember to specify <tt>-all</tt> if you want to replace all matches in the string.  
+
+<p>The argument after the regexp should be the replacement text.  You can specify a literal replacement using the brace syntax, or reference a string variable.  The <tt>regsub</tt> command recognizes a few metacharacters in the replacement text.  You can use <tt>\0</tt> as a placeholder for the whole regex match, and <tt>\1</tt> through <tt>\9</tt> for the text matched by one of the first nine <A HREF="brackets.html" TARGET="_top">capturing groups</A>.  You can also use <tt>&</tt> as a synonym of <tt>\0</tt>.  Note that there's no backslash in front of the ampersand.  <tt>&</tt> is substituted with the whole regex match, while <tt>\&</tt> is substituted with a literal ampersand.  Use <tt>\\</tt> to insert a literal backslash.  You only need to escape backslashes if they're followed by a digit, to prevent the combination from being seen as a backreference.  Again, to prevent unnecessary duplication of backslashes, you should enclose the replacement text with braces instead of double quotes. The replacement text <tt>\1</tt> becomes <tt>{\1}</tt> when using braces, and <tt>"\\1"</tt> when using quotes.</p>
+
+<p>The final argument is optional.  If you pass a variable reference as the final argument, that variable will receive the string with the replacements applied, and <tt>regsub</tt> will return an integer indicating the number of replacements made.  If you omit the final argument, <tt>regsub</tt> will return the string with the replacements applied.</p>
+<h2>Make a Donation</h2>
+<p>Did this website just save you a trip to the bookstore?  Please <a href="donate.html">make a donation</a> to support this site, and you'll get a lifetime of advertisement-free access to this site!</p>
+<DIV id=copyright>
+<P CLASS=copyright>Page URL: <A HREF="tcl.html" TARGET="_top">http://www.Regular-Expressions.info/tcl.html</A><BR>
+Page last updated: 22 September 2010<BR>
+Site last updated: 17 June 2013<BR>
+Copyright &copy; 2003-2013 Jan Goyvaerts. All rights reserved.</P>
+</DIV> 
+
+<script type="text/javascript"><!--
+var google_conversion_id = 1072547447; var google_conversion_language = "en"; var google_conversion_format = "3"; var google_conversion_color = "666666"; var google_conversion_label = "sqPQCInO3QEQ94y3_wM"; var google_conversion_value = 0;
+//-->
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1072547447/?label=sqPQCInO3QEQ94y3_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</DIV> 
+<DIV id=side><script type="text/javascript">movecontent();</script><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Regex Tools</TD></TR><TR><TD><A HREF="grep.html" TARGET=_top>grep</A></TD></TR><TR><TD><A HREF="powergrep.html" TARGET=_top>PowerGREP</A></TD></TR><TR><TD><A HREF="regexbuddy.html" TARGET=_top>RegexBuddy</A></TD></TR><TR><TD><A HREF="regexmagic.html" TARGET=_top>RegexMagic</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>General Applications</TD></TR><TR><TD><A HREF="editpadpro.html" TARGET=_top>EditPad&nbsp;Pro</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Languages &amp; Libraries</TD></TR><TR><TD><A HREF="delphi.html" TARGET=_top>Delphi</A></TD></TR><TR><TD><A HREF="gnu.html" TARGET=_top>GNU&nbsp;(Linux)</A></TD></TR><TR><TD><A HREF="groovy.html" TARGET=_top>Groovy</A></TD></TR><TR><TD><A HREF="java.html" TARGET=_top>Java</A></TD></TR><TR><TD><A HREF="javascript.html" TARGET=_top>JavaScript</A></TD></TR><TR><TD><A HREF="dotnet.html" TARGET=_top>.NET</A></TD></TR><TR><TD><A HREF="pcre.html" TARGET=_top>PCRE&nbsp;(C/C++)</A></TD></TR><TR><TD><A HREF="perl.html" TARGET=_top>Perl</A></TD></TR><TR><TD><A HREF="php.html" TARGET=_top>PHP</A></TD></TR><TR><TD><A HREF="posix.html" TARGET=_top>POSIX</A></TD></TR><TR><TD><A HREF="powershell.html" TARGET=_top>PowerShell</A></TD></TR><TR><TD><A HREF="python.html" TARGET=_top>Python</A></TD></TR><TR><TD><A HREF="rlanguage.html" TARGET=_top>R</A></TD></TR><TR><TD><A HREF="realbasic.html" TARGET=_top>REALbasic</A></TD></TR><TR><TD><A HREF="ruby.html" TARGET=_top>Ruby</A></TD></TR><TR><TD><A HREF="tcl.html" TARGET=_top>Tcl</A></TD></TR><TR><TD><A HREF="vbscript.html" TARGET=_top>VBScript</A></TD></TR><TR><TD><A HREF="vb.html" TARGET=_top>Visual&nbsp;Basic&nbsp;6</A></TD></TR><TR><TD><A HREF="wxwidgets.html" TARGET=_top>wxWidgets</A></TD></TR><TR><TD><A HREF="xml.html" TARGET=_top>XML&nbsp;Schema</A></TD></TR><TR><TD><A HREF="xpath.html" TARGET=_top>XQuery&nbsp;&amp;&nbsp;XPath</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>Databases</TD></TR><TR><TD><A HREF="mysql.html" TARGET=_top>MySQL</A></TD></TR><TR><TD><A HREF="oracle.html" TARGET=_top>Oracle</A></TD></TR><TR><TD><A HREF="postgresql.html" TARGET=_top>PostgreSQL</A></TD></TR>
+</TABLE><TABLE CLASS=side CELLSPACING=0 CELLPADDING=4><TR><TD CLASS=sideheader>More Information</TD></TR><TR><TD><A HREF="index.html" TARGET=_top>Introduction</A></TD></TR><TR><TD><A HREF="quickstart.html" TARGET=_top>Quick&nbsp;Start</A></TD></TR><TR><TD><A HREF="tutorial.html" TARGET=_top>Tutorial</A></TD></TR><TR><TD><A HREF="tools.html" TARGET=_top>Tools&nbsp;and&nbsp;Languages</A></TD></TR><TR><TD><A HREF="examples.html" TARGET=_top>Examples</A></TD></TR><TR><TD><A HREF="books.html" TARGET=_top>Books</A></TD></TR><TR><TD><A HREF="reference.html" TARGET=_top>Reference</A></TD></TR><TR><TD><A HREF="print.html" TARGET=_top>Print&nbsp;PDF</A></TD></TR><TR><TD><A HREF="about.html" TARGET=_top>About&nbsp;This&nbsp;Site</A></TD></TR><TR><TD><A HREF="updates.html" TARGET=_top>RSS&nbsp;Feed&nbsp;&amp;&nbsp;Blog</A></TD></TR></TABLE><div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7485249680256358";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FF6600";
+google_color_bg = "FFF4E8";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "803300";
+google_ui_features = "rc:0";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><P>&nbsp;</P> <TABLE CLASS=sidead CELLSPACING=0 CELLPADDING=4> <TR><TD CLASS=sideheader>PowerGREP 4</TD></TR> <TR><TD CLASS=ad><A HREF="http://www.powergrep.com/" TARGET=_top><IMG SRC="img/pgr.gif" WIDTH=32 HEIGHT=32 ALT="PowerGREP" ALIGN=LEFT CLASS=iconleft BORDER=0></A> <A HREF="http://www.powergrep.com/" TARGET=_top>PowerGREP</A> is probably the most powerful regex-based text processing tool available today. A knowledge worker's Swiss army knife for searching through, extracting information from, and updating piles of files.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to search through large numbers of text and binary files. Quickly find the files you are looking for, or extract the information you need. Look through just a handful of files or folders, or scan entire drives and network shares.</TD></TR> <TR><TD CLASS=ad>Search and replace using text, binary data or one or more regular expressions to automate repetitive editing tasks. Preview replacements before modifying files, and stay safe with flexible backup and undo options.</TD></TR> <TR><TD CLASS=ad>Use regular expressions to rename files, copy files, or merge and split the contents of files. Work with plain text files, Unicode files, binary files, compressed files, and files in proprietary formats such as MS Office, OpenOffice, and PDF. Runs on Windows 2000, XP, Vista, 7, and 8.</TD></TR> <TR><TD><A HREF="http://www.powergrep.com/" TARGET=_top>More information</A></TD></TR> <TR><TD><A HREF="http://www.powergrep.com/download.html" TARGET=_top>Download PowerGREP now</A></TD></TR> </TABLE></DIV><script type="text/javascript">movecontent();</script></BODY></HTML>
